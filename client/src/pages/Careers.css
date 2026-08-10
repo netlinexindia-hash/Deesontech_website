@@ -1,0 +1,95 @@
+/* ---------- Careers Page ---------- */
+
+/* Perks */
+.careers-perks-section {
+  background: var(--color-bg-secondary);
+}
+
+.careers-perks-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-6);
+}
+
+.careers-perk {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  text-align: center;
+  align-items: center;
+}
+
+.careers-perk__icon {
+  font-size: 2rem;
+}
+
+.careers-perk__title {
+  font-size: var(--font-size-base);
+  font-weight: 700;
+}
+
+.careers-perk__desc {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+/* Job Openings */
+.careers-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.careers-job {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.careers-job__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+.careers-job__title {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+}
+
+.careers-job__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.careers-job__location,
+.careers-job__type {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.careers-job__desc {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+}
+
+@media (max-width: 768px) {
+  .careers-perks-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .careers-job__top {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .careers-perks-grid {
+    grid-template-columns: 1fr;
+  }
+}
