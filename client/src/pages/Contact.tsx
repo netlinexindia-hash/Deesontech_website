@@ -92,15 +92,15 @@ export default function Contact() {
             <div className="card contact-info-card">
               <span className="contact-info__icon">📞</span>
               <h4>Call Us</h4>
-              <p>+91 98765 43210</p>
+              <p>+91 971626 6348</p>
               <p>Mon – Fri, 9 AM – 6 PM IST</p>
             </div>
             <div className="card contact-info-card">
               <span className="contact-info__icon">📍</span>
               <h4>Visit Us</h4>
               <p>Deesontech Pvt. Ltd.</p>
-              <p>Hinjewadi IT Park, Pune</p>
-              <p>Maharashtra 411057, India</p>
+              <p>G-19 Sector 3, Noida</p>
+              <p>Uttar Pradesh 201301, India</p>
             </div>
           </div>
         </div>

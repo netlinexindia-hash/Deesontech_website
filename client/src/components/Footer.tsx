@@ -14,7 +14,7 @@ export default function Footer() {
               Deeson<span className="gradient-text">tech</span>
             </Link>
             <p className="footer__tagline">
-              Empowering businesses with cutting-edge software products and IT services since 2020.
+              Empowering businesses with cutting-edge software products and IT services since 2021.
             </p>
             <div className="footer__socials">
               <a href="#" className="footer__social" aria-label="LinkedIn">in</a>
@@ -45,8 +45,8 @@ export default function Footer() {
           <div className="footer__column">
             <h4 className="footer__heading">Contact Us</h4>
             <p className="footer__info">📧 info@deesontech.com</p>
-            <p className="footer__info">📞 +91 98765 43210</p>
-            <p className="footer__info">📍 Pune, Maharashtra, India</p>
+            <p className="footer__info">📞 +91 97162 66348 </p>
+            <p className="footer__info">📍 G-19 Sec 3, Noida, India</p>
           </div>
         </div>
 
