@@ -1,0 +1,43 @@
+/* ============================================================
+   Admin Products – Modal Styles
+   ============================================================ */
+
+/* Overlay */
+.admin-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* Modal panel */
+.admin-modal {
+  width: 100%;
+  max-width: 480px;
+  padding: var(--space-8);
+  margin: var(--space-4);
+}
+
+.admin-modal__title {
+  font-size: var(--font-size-2xl);
+  font-weight: 800;
+  margin-bottom: var(--space-6);
+}
+
+.admin-modal__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.admin-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
