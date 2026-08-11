@@ -2,6 +2,11 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 
+import productsRoutes from './routes/products';
+import servicesRoutes from './routes/services';
+import contactsRoutes from './routes/contacts';
+import careersRoutes from './routes/careers';
+
 dotenv.config();
 
 const app = express();
@@ -15,7 +20,7 @@ app.get('/api/health', (req: Request, res: Response) => {
   res.status(200).json({ status: 'ok', message: 'Deesontech API is running' });
 });
 
-// Placeholder for routes that will be implemented later
+// Auth route
 app.post('/api/auth/login', (req: Request, res: Response) => {
   const { email, password } = req.body;
   if (email === 'admin@deesontech.com' && password === 'admin123') {
@@ -24,9 +29,11 @@ app.post('/api/auth/login', (req: Request, res: Response) => {
   res.status(401).json({ error: 'Invalid credentials' });
 });
 
-app.post('/api/contacts', (req: Request, res: Response) => {
-  res.status(201).json({ message: 'Contact message received successfully.' });
-});
+// Register API Routes
+app.use('/api/products', productsRoutes);
+app.use('/api/services', servicesRoutes);
+app.use('/api/contacts', contactsRoutes);
+app.use('/api/careers', careersRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

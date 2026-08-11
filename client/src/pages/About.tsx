@@ -9,7 +9,7 @@ const team = [
 
 const values = [
   { icon: '💡', title: 'Innovation First', desc: 'We push boundaries and embrace emerging technologies to deliver solutions that keep you ahead of the curve.' },
-  { icon: '🤝', title: 'Client Partnership', desc: 'We don't just build software – we become an extension of your team, invested in your long-term success.' },
+  { icon: '🤝', title: 'Client Partnership', desc: "We don't just build software – we become an extension of your team, invested in your long-term success." },
   { icon: '🎯', title: 'Quality Obsession', desc: 'Every line of code, every design pixel, every deployment is held to the highest standards of excellence.' },
   { icon: '🌱', title: 'Continuous Growth', desc: 'We foster a culture of learning, mentorship, and career development for our team and our clients.' },
 ];
