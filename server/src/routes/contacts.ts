@@ -1,39 +1,52 @@
 import { Router, Request, Response } from 'express';
 import { authMiddleware } from '../middleware/auth';
+import pool from '../config/db';
 
 const router = Router();
 
-// Mock database
-let messages = [
-  { id: 1, name: 'Alice Smith', email: 'alice@example.com', subject: 'CloudSync Pro inquiry', message: 'I would like a demo.', date: '2026-08-10', status: 'Unread' },
-  { id: 2, name: 'Bob Johnson', email: 'bob@example.com', subject: 'Custom development quote', message: 'Looking for a new app.', date: '2026-08-09', status: 'Read' },
-];
-
 // POST new contact message (public)
-router.post('/', (req: Request, res: Response) => {
-  const newMessage = {
-    id: messages.length + 1,
-    date: new Date().toISOString().split('T')[0],
-    status: 'Unread',
-    ...req.body
-  };
-  messages.push(newMessage);
-  res.status(201).json({ message: 'Contact message received successfully.' });
+router.post('/', async (req: Request, res: Response) => {
+  try {
+    const { name, email, subject, message } = req.body;
+    await pool.query(
+      'INSERT INTO contacts (name, email, subject, message) VALUES ($1, $2, $3, $4)',
+      [name, email, subject, message]
+    );
+    res.status(201).json({ message: 'Contact message received successfully.' });
+  } catch (err) {
+    console.error('Error saving contact message:', err);
+    res.status(500).json({ error: 'Database error' });
+  }
 });
 
 // GET all contact messages (protected)
-router.get('/', authMiddleware, (req: Request, res: Response) => {
-  res.json(messages);
+router.get('/', authMiddleware, async (req: Request, res: Response) => {
+  try {
+    const result = await pool.query('SELECT * FROM contacts ORDER BY id DESC');
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error fetching contacts:', err);
+    res.status(500).json({ error: 'Database error' });
+  }
 });
 
 // PUT update contact message status (protected)
-router.put('/:id', authMiddleware, (req: Request, res: Response) => {
-  const id = parseInt(req.params.id);
-  const index = messages.findIndex(m => m.id === id);
-  if (index === -1) return res.status(404).json({ error: 'Message not found' });
-  
-  messages[index] = { ...messages[index], ...req.body };
-  res.json(messages[index]);
+router.put('/:id', authMiddleware, async (req: Request, res: Response) => {
+  try {
+    const id = parseInt(req.params.id);
+    const { status } = req.body;
+    const result = await pool.query(
+      'UPDATE contacts SET status = COALESCE($1, status) WHERE id = $2 RETURNING *',
+      [status, id]
+    );
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Message not found' });
+    }
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Error updating contact:', err);
+    res.status(500).json({ error: 'Database error' });
+  }
 });
 
 export default router;

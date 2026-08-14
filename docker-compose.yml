@@ -21,6 +21,7 @@ services:
 
   # ---- Backend API Server ----
   server:
+    image: deesontech/deesontech-server:v1.0
     build:
       context: ./server
       dockerfile: Dockerfile
@@ -37,6 +38,7 @@ services:
 
   # ---- Frontend (Nginx) ----
   client:
+    image: deesontech/deesontech-client:v1.0
     build:
       context: ./client
       dockerfile: Dockerfile

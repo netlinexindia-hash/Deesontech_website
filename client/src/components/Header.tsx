@@ -45,9 +45,7 @@ export default function Header() {
               {link.label}
             </Link>
           ))}
-          <Link to="/admin/login" className="btn btn-primary btn-sm" id="nav-admin">
-            Admin Panel
-          </Link>
+
         </nav>
 
         <button

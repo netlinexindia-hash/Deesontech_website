@@ -6,6 +6,7 @@ import productsRoutes from './routes/products';
 import servicesRoutes from './routes/services';
 import contactsRoutes from './routes/contacts';
 import careersRoutes from './routes/careers';
+import { initDb } from './config/initDb';
 
 dotenv.config();
 
@@ -35,6 +36,14 @@ app.use('/api/services', servicesRoutes);
 app.use('/api/contacts', contactsRoutes);
 app.use('/api/careers', careersRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+// Initialize database then start server
+initDb()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error('Failed to initialize database, exiting:', err);
+    process.exit(1);
+  });
