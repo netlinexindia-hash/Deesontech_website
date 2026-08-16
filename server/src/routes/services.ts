@@ -18,10 +18,11 @@ router.get('/', async (req: Request, res: Response) => {
 // POST new service (protected)
 router.post('/', authMiddleware, async (req: Request, res: Response) => {
   try {
-    const { title, status } = req.body;
+    const { title, status, icon, desc, features } = req.body;
+    const featuresJson = Array.isArray(features) ? JSON.stringify(features) : features;
     const result = await pool.query(
-      'INSERT INTO services (title, status) VALUES ($1, $2) RETURNING *',
-      [title, status || 'Active']
+      'INSERT INTO services (title, status, icon, "desc", features) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      [title, status || 'Active', icon, desc, featuresJson]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -34,10 +35,11 @@ router.post('/', authMiddleware, async (req: Request, res: Response) => {
 router.put('/:id', authMiddleware, async (req: Request, res: Response) => {
   try {
     const id = parseInt(req.params.id);
-    const { title, status } = req.body;
+    const { title, status, icon, desc, features } = req.body;
+    const featuresJson = Array.isArray(features) ? JSON.stringify(features) : features;
     const result = await pool.query(
-      'UPDATE services SET title = COALESCE($1, title), status = COALESCE($2, status) WHERE id = $3 RETURNING *',
-      [title, status, id]
+      'UPDATE services SET title = COALESCE($1, title), status = COALESCE($2, status), icon = COALESCE($3, icon), "desc" = COALESCE($4, "desc"), features = COALESCE($5, features) WHERE id = $6 RETURNING *',
+      [title, status, icon, desc, featuresJson, id]
     );
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Service not found' });

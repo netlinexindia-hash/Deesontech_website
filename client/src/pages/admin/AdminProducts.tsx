@@ -8,7 +8,7 @@ const emptyForm: Omit<Product, 'id'> = {
 };
 
 export default function AdminProducts() {
-  const { products, addProduct, updateProduct, deleteProduct } = useProducts();
+  const { products, addProduct, updateProduct, deleteProduct, loading, error } = useProducts();
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [form, setForm] = useState<Omit<Product, 'id'>>(emptyForm);
@@ -49,6 +49,9 @@ export default function AdminProducts() {
   };
 
   /* ---------- render ---------- */
+  if (loading && products.length === 0) return <div className="admin-page"><p>Loading products...</p></div>;
+  if (error) return <div className="admin-page"><p style={{color: 'red'}}>Error: {error}</p></div>;
+
   return (
     <div className="admin-page animate-fade-in-up">
       <div className="admin-page__header">

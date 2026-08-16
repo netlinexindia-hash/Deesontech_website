@@ -13,62 +13,99 @@ export interface Product {
 
 interface ProductsContextType {
   products: Product[];
-  addProduct: (product: Omit<Product, 'id'>) => void;
-  updateProduct: (id: number, data: Partial<Product>) => void;
-  deleteProduct: (id: number) => void;
+  addProduct: (product: Omit<Product, 'id'>) => Promise<void>;
+  updateProduct: (id: number, data: Partial<Product>) => Promise<void>;
+  deleteProduct: (id: number) => Promise<void>;
+  loading: boolean;
+  error: string | null;
 }
 
 const ProductsContext = createContext<ProductsContextType | undefined>(undefined);
 
-const STORAGE_KEY = 'deesontech_products';
-
-const defaultProducts: Product[] = [
-  { id: 1, name: 'CloudSync Pro', category: 'Cloud', price: '$299/mo', status: 'Active', icon: '☁️', badge: 'Popular', desc: 'Enterprise-grade cloud synchronization platform for seamless data management across all your devices and teams.' },
-  { id: 2, name: 'SecureVault', category: 'Security', price: '$199/mo', status: 'Active', icon: '🔒', badge: 'New', desc: 'Military-grade encryption solution with zero-knowledge architecture protecting your most sensitive business data.' },
-  { id: 3, name: 'DataFlow Analytics', category: 'Analytics', price: '$399/mo', status: 'Active', icon: '📊', badge: 'Enterprise', desc: 'Real-time BI dashboard with AI-powered insights, custom reports, and predictive analytics capabilities.' },
-  { id: 4, name: 'TeamHub', category: 'Communication', price: '$49/mo', status: 'Active', icon: '💬', badge: 'Startup', desc: 'All-in-one team communication platform with video calls, messaging, file sharing, and project boards.' },
-  { id: 5, name: 'DeployPilot', category: 'DevOps', price: '$249/mo', status: 'Active', icon: '🚀', badge: 'New', desc: 'Automated CI/CD pipeline manager with one-click deployments, rollback, and infrastructure-as-code support.' },
-  { id: 6, name: 'ShieldGuard', category: 'Security', price: '$349/mo', status: 'Active', icon: '🛡️', badge: 'Enterprise', desc: 'Advanced threat detection and response system with 24/7 monitoring, SIEM integration, and compliance tools.' },
-  { id: 7, name: 'CloudStore', category: 'Cloud', price: '$99/mo', status: 'Active', icon: '💾', badge: 'Starter', desc: 'Scalable object storage solution with global CDN, versioning, and lifecycle management for any file type.' },
-  { id: 8, name: 'InsightIQ', category: 'Analytics', price: '$179/mo', status: 'Active', icon: '🧠', badge: 'AI', desc: 'AI-driven customer analytics platform that uncovers behavioral patterns and predicts churn before it happens.' },
-  { id: 9, name: 'PipelineX', category: 'DevOps', price: '$199/mo', status: 'Active', icon: '⚙️', badge: 'Popular', desc: 'Container orchestration and microservices management platform built for cloud-native development teams.' },
-];
-
-function loadProducts(): Product[] {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) return JSON.parse(stored);
-  } catch {
-    /* ignore parse errors */
-  }
-  return defaultProducts;
+function getToken() {
+  return localStorage.getItem('admin_token');
 }
 
 export function ProductsProvider({ children }: { children: ReactNode }) {
-  const [products, setProducts] = useState<Product[]>(loadProducts);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Persist to localStorage whenever products change
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
-  }, [products]);
+    fetchProducts();
+  }, []);
 
-  const addProduct = (product: Omit<Product, 'id'>) => {
-    setProducts((prev) => {
-      const newId = prev.length > 0 ? Math.max(...prev.map((p) => p.id)) + 1 : 1;
-      return [...prev, { id: newId, ...product }];
-    });
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch('/api/products');
+      if (!res.ok) throw new Error('Failed to fetch products');
+      const data = await res.json();
+      setProducts(data);
+      setError(null);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const updateProduct = (id: number, data: Partial<Product>) => {
-    setProducts((prev) => prev.map((p) => (p.id === id ? { ...p, ...data } : p)));
+  const addProduct = async (product: Omit<Product, 'id'>) => {
+    try {
+      const res = await fetch('/api/products', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${getToken()}`
+        },
+        body: JSON.stringify(product),
+      });
+      if (!res.ok) throw new Error('Failed to add product');
+      const newProduct = await res.json();
+      setProducts((prev) => [...prev, newProduct]);
+    } catch (err: any) {
+      console.error(err);
+      throw err;
+    }
   };
 
-  const deleteProduct = (id: number) => {
-    setProducts((prev) => prev.filter((p) => p.id !== id));
+  const updateProduct = async (id: number, data: Partial<Product>) => {
+    try {
+      const res = await fetch(`/api/products/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${getToken()}`
+        },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error('Failed to update product');
+      const updatedProduct = await res.json();
+      setProducts((prev) => prev.map((p) => (p.id === id ? updatedProduct : p)));
+    } catch (err: any) {
+      console.error(err);
+      throw err;
+    }
+  };
+
+  const deleteProduct = async (id: number) => {
+    try {
+      const res = await fetch(`/api/products/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${getToken()}`
+        }
+      });
+      if (!res.ok) throw new Error('Failed to delete product');
+      setProducts((prev) => prev.filter((p) => p.id !== id));
+    } catch (err: any) {
+      console.error(err);
+      throw err;
+    }
   };
 
   return (
-    <ProductsContext.Provider value={{ products, addProduct, updateProduct, deleteProduct }}>
+    <ProductsContext.Provider value={{ products, addProduct, updateProduct, deleteProduct, loading, error }}>
       {children}
     </ProductsContext.Provider>
   );
@@ -79,3 +116,4 @@ export function useProducts() {
   if (!context) throw new Error('useProducts must be used within a ProductsProvider');
   return context;
 }
+

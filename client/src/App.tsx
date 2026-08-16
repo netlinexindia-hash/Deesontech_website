@@ -15,32 +15,35 @@ import AdminContacts from './pages/admin/AdminContacts';
 import AdminCareers from './pages/admin/AdminCareers';
 import { AuthProvider } from './context/AuthContext';
 import { ProductsProvider } from './context/ProductsContext';
+import { ServicesProvider } from './context/ServicesContext';
 
 function App() {
   return (
     <AuthProvider>
       <ProductsProvider>
-        <Routes>
-          {/* Public Routes */}
-          <Route element={<PublicLayout />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/products" element={<Products />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/careers" element={<Careers />} />
-          </Route>
+        <ServicesProvider>
+          <Routes>
+            {/* Public Routes */}
+            <Route element={<PublicLayout />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/products" element={<Products />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/careers" element={<Careers />} />
+            </Route>
 
-          {/* Admin Routes */}
-          <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<AdminDashboard />} />
-            <Route path="products" element={<AdminProducts />} />
-            <Route path="services" element={<AdminServices />} />
-            <Route path="contacts" element={<AdminContacts />} />
-            <Route path="careers" element={<AdminCareers />} />
-          </Route>
-        </Routes>
+            {/* Admin Routes */}
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="products" element={<AdminProducts />} />
+              <Route path="services" element={<AdminServices />} />
+              <Route path="contacts" element={<AdminContacts />} />
+              <Route path="careers" element={<AdminCareers />} />
+            </Route>
+          </Routes>
+        </ServicesProvider>
       </ProductsProvider>
     </AuthProvider>
   );

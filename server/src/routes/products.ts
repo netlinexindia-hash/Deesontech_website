@@ -18,10 +18,10 @@ router.get('/', async (req: Request, res: Response) => {
 // POST new product (protected)
 router.post('/', authMiddleware, async (req: Request, res: Response) => {
   try {
-    const { name, category, price, status } = req.body;
+    const { name, category, price, status, icon, badge, desc } = req.body;
     const result = await pool.query(
-      'INSERT INTO products (name, category, price, status) VALUES ($1, $2, $3, $4) RETURNING *',
-      [name, category, price, status || 'Active']
+      'INSERT INTO products (name, category, price, status, icon, badge, "desc") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+      [name, category, price, status || 'Active', icon, badge, desc]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -34,10 +34,10 @@ router.post('/', authMiddleware, async (req: Request, res: Response) => {
 router.put('/:id', authMiddleware, async (req: Request, res: Response) => {
   try {
     const id = parseInt(req.params.id);
-    const { name, category, price, status } = req.body;
+    const { name, category, price, status, icon, badge, desc } = req.body;
     const result = await pool.query(
-      'UPDATE products SET name = COALESCE($1, name), category = COALESCE($2, category), price = COALESCE($3, price), status = COALESCE($4, status) WHERE id = $5 RETURNING *',
-      [name, category, price, status, id]
+      'UPDATE products SET name = COALESCE($1, name), category = COALESCE($2, category), price = COALESCE($3, price), status = COALESCE($4, status), icon = COALESCE($5, icon), badge = COALESCE($6, badge), "desc" = COALESCE($7, "desc") WHERE id = $8 RETURNING *',
+      [name, category, price, status, icon, badge, desc, id]
     );
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Product not found' });

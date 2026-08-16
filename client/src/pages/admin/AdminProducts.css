@@ -19,6 +19,8 @@
 .admin-modal {
   width: 100%;
   max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
   padding: var(--space-8);
   margin: var(--space-4);
 }
