@@ -24,7 +24,8 @@ app.get('/api/health', (req: Request, res: Response) => {
 // Auth route
 app.post('/api/auth/login', (req: Request, res: Response) => {
   const { email, password } = req.body;
-  if (email === 'admin@deesontech.com' && password === 'admin123') {
+  const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+  if (email === 'admin@deesontech.com' && password === adminPassword) {
     return res.json({ token: 'mock-jwt-token', user: { email, role: 'admin' } });
   }
   res.status(401).json({ error: 'Invalid credentials' });

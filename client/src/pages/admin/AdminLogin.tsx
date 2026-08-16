@@ -20,7 +20,7 @@ export default function AdminLogin() {
     if (success) {
       navigate('/admin');
     } else {
-      setError('Invalid credentials. Try admin@deesontech.com / admin123');
+      setError('Invalid email or password.');
     }
   };
 
@@ -47,7 +47,7 @@ export default function AdminLogin() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="admin@deesontech.com"
+              placeholder="admin@yourdomain.com"
             />
           </div>
           <div className="form-group">
@@ -71,10 +71,6 @@ export default function AdminLogin() {
             {loading ? 'Signing in...' : 'Sign In →'}
           </button>
         </form>
-
-        <p className="admin-login__hint">
-          Demo: admin@deesontech.com / admin123
-        </p>
       </div>
     </div>
   );

@@ -32,6 +32,7 @@ services:
       PORT: 5000
       DATABASE_URL: postgres://deesontech_user:${POSTGRES_PASSWORD:-changeme}@db:5432/deesontech_db
       NODE_ENV: production
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-DeesonTech2024!}
     depends_on:
       db:
         condition: service_healthy

@@ -39,27 +39,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return true;
       }
 
-      /* Fallback demo login for development */
-      if (email === 'admin@deesontech.com' && password === 'admin123') {
-        const demoUser = { email, role: 'admin' };
-        localStorage.setItem('admin_token', 'demo-token');
-        localStorage.setItem('admin_user', JSON.stringify(demoUser));
-        setIsAuthenticated(true);
-        setUser(demoUser);
-        return true;
-      }
-
       return false;
     } catch {
-      /* API not available – use demo credentials */
-      if (email === 'admin@deesontech.com' && password === 'admin123') {
-        const demoUser = { email, role: 'admin' };
-        localStorage.setItem('admin_token', 'demo-token');
-        localStorage.setItem('admin_user', JSON.stringify(demoUser));
-        setIsAuthenticated(true);
-        setUser(demoUser);
-        return true;
-      }
       return false;
     }
   };

@@ -1,39 +1,7 @@
 import { Link } from 'react-router-dom';
+import { useProducts } from '../context/ProductsContext';
+import { useServices } from '../context/ServicesContext';
 import './Home.css';
-
-const featuredProducts = [
-  {
-    id: 1,
-    name: 'CloudSync Pro',
-    description: 'Enterprise-grade cloud synchronization platform for seamless data management across all your devices.',
-    price: '$299/mo',
-    badge: 'Popular',
-    icon: '☁️',
-  },
-  {
-    id: 2,
-    name: 'SecureVault',
-    description: 'Military-grade encryption solution protecting your business data with zero-knowledge architecture.',
-    price: '$199/mo',
-    badge: 'New',
-    icon: '🔒',
-  },
-  {
-    id: 3,
-    name: 'DataFlow Analytics',
-    description: 'Real-time business intelligence dashboard with AI-powered insights and predictive analytics.',
-    price: '$399/mo',
-    badge: 'Enterprise',
-    icon: '📊',
-  },
-];
-
-const services = [
-  { icon: '🛠️', title: 'Custom Software Development', desc: 'Tailor-made solutions built to fit your unique business requirements.' },
-  { icon: '☁️', title: 'Cloud Infrastructure', desc: 'Scalable, reliable cloud architecture design and migration services.' },
-  { icon: '🔐', title: 'Cybersecurity', desc: 'Comprehensive security audits, penetration testing, and threat mitigation.' },
-  { icon: '📱', title: 'Mobile App Development', desc: 'Native and cross-platform mobile applications for iOS and Android.' },
-];
 
 const stats = [
   { value: '250+', label: 'Projects Delivered' },
@@ -43,6 +11,12 @@ const stats = [
 ];
 
 export default function Home() {
+  const { products } = useProducts();
+  const { services } = useServices();
+
+  const featuredProducts = products.filter(p => p.status === 'Active').slice(0, 3);
+  const featuredServices = services.filter(s => s.status === 'Active').slice(0, 4);
+
   return (
     <div className="home" id="home-page">
       {/* -------- HERO -------- */}
@@ -131,10 +105,10 @@ export default function Home() {
               <div key={product.id} className={`product-card card animate-fade-in-up delay-${i + 1}`}>
                 <div className="product-card__header">
                   <span className="product-card__icon">{product.icon}</span>
-                  <span className="badge badge-primary">{product.badge}</span>
+                  {product.badge && <span className="badge badge-primary">{product.badge}</span>}
                 </div>
                 <h3 className="product-card__name">{product.name}</h3>
-                <p className="product-card__desc">{product.description}</p>
+                <p className="product-card__desc">{product.desc}</p>
                 <div className="product-card__footer">
                   <span className="product-card__price">{product.price}</span>
                   <Link to="/products" className="btn btn-secondary btn-sm">
@@ -167,8 +141,8 @@ export default function Home() {
           </div>
 
           <div className="services-home__grid">
-            {services.map((service, i) => (
-              <div key={i} className={`services-home__card card animate-fade-in-up delay-${i + 1}`}>
+            {featuredServices.map((service, i) => (
+              <div key={service.id || i} className={`services-home__card card animate-fade-in-up delay-${i + 1}`}>
                 <span className="services-home__icon">{service.icon}</span>
                 <h3 className="services-home__title">{service.title}</h3>
                 <p className="services-home__desc">{service.desc}</p>
